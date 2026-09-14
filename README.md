@@ -1,6 +1,4 @@
-# Influência das Representações Cromáticas na Classificação de Imagens Histopatológicas
-
-Este repositório contém o pipeline de aquisição, processamento e estruturação de dados desenvolvido como parte do Trabalho de Conclusão de Curso (TCC) em Ciência da Computação. 
+# Este repositório contém o pipeline de aquisição, processamento e estruturação de dados desenvolvido como parte do Trabalho de Conclusão de Curso em Ciência da Computação. 
 
 O projeto tem como objetivo principal investigar a influência das representações cromáticas na classificação de imagens histopatológicas, utilizando arquiteturas de Redes Neurais Convolucionais (CNNs), sendo elas ResNet50, EfficientNetV2 e ConvNeXtV2.
 
@@ -33,7 +31,7 @@ O pipeline é composto por 5 etapas automatizadas:
 
 ---
 
-##  Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 A base deste pipeline de processamento foi construída sobre as seguintes tecnologias:
 - **Python 3.12.9**
@@ -44,9 +42,16 @@ A base deste pipeline de processamento foi construída sobre as seguintes tecnol
 
 ---
 
-##  Instruções de Configuração e Uso
+##  Instruções de Uso e Configuração
 
-### 1. Dependências
+### 1. Execução
+Os scripts Python devem ser executados seguindo a ordem numérica de sua nomenclatura (1, 2, 3, 4 e 5), uma vez que um arquivo depende da saída gerada pelo anterior para funcionar. 
+
+**Nota sobre validação:** Os scripts 2 e 5 são voltados exclusivamente para testes e validação visual, permitindo a visualização da lâmina inteira reconstituída e com a sobreposição do mapa de calor.
+
+**Nota sobre acesso aos dados:** Considerando a forma de aquisição das lâminas disponível, o arquivo 1 foi implementado para buscar os *patches* diretamente em um servidor em nuvem. Por se tratar de um ambiente com acesso restrito, não será possível replicar essa extração diretamente sem as devidas permissões. Caso deseje replicar este estudo, o leitor poderá adaptar a lógica de extração e salvamento do script 1 para o seu caso de uso (imagens locais, por exemplo). Para que os demais códigos funcionem corretamente, é estritamente necessário manter o padrão de nomenclatura no salvamento dos arquivos, permitindo que a expressão regular `padrao = re.compile(r"X(\d+)_Y(\d+)")` consiga extrair e identificar as coordenadas dos *patches*.
+
+### 2. Dependências
 Recomenda-se a criação de um ambiente virtual (venv) para evitar conflitos de dependências. Com o ambiente ativo, instale as bibliotecas necessárias:
 
 ```bash
