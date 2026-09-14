@@ -175,7 +175,7 @@ def process_and_save_tile(level, x, y, save_dir):
 
             # Branco puro
             if np.all(img_np == 255):
-                print(f"Branco Puro: X{x} Y{y} ignorado.")
+                print(f"Vidro: X{x} Y{y} ignorado.")
 
                 salvar_no_cache(cache_key)
                 return True
@@ -186,7 +186,7 @@ def process_and_save_tile(level, x, y, save_dir):
             # Muito fundo
             if proporcao_branco > 0.85:
                 print(
-                    f"Muito fundo: X{x} Y{y} "
+                    f"Muito Vidro: X{x} Y{y} "
                     f"é {proporcao_branco:.1%} fundo."
                 )
 

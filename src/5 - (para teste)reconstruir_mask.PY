@@ -16,20 +16,28 @@ classificacao = config["classificacao"]
 # ==========================================
 # ARQUIVOS AUTOMÁTICOS
 # ==========================================
+diretorio_info = os.path.join("dataset_info", str(slide_id))
 
-MAPA_ORIGINAL = (
+# Garante que a pasta existe (embora já deva ter sido criada nos passos anteriores)
+os.makedirs(diretorio_info, exist_ok=True)
+
+MAPA_ORIGINAL = os.path.join(
+    diretorio_info,
     f"MAPA_VALIDACAO_{slide_id}_{classificacao}.jpg"
 )
 
-JSON_META = (
+JSON_META = os.path.join(
+    diretorio_info,
     f"MAPA_VALIDACAO_{slide_id}_{classificacao}.json"
 )
 
-CSV_LABELS = (
+CSV_LABELS = os.path.join(
+    diretorio_info,
     f"{slide_id}_labels_tiles.csv"
 )
 
-SAIDA = (
+SAIDA = os.path.join(
+    diretorio_info,
     f"MAPA_VALIDACAO_{slide_id}_{classificacao}_RECONSTRUIDO.png"
 )
 

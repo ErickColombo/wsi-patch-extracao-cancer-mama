@@ -28,15 +28,22 @@ PASTA_TILES = os.path.join(
     f"level_{nivel_zoom}"
 )
 
-ARQUIVO_MASK = (
+# 1. Define o diretório de informações atualizado
+diretorio_info = os.path.join("dataset_info", str(slide_id))
+
+# 2. Atualiza os caminhos de leitura e do CSV para o novo diretório
+ARQUIVO_MASK = os.path.join(
+    diretorio_info,
     f"MAPA_VALIDACAO_{slide_id}_{classificacao}_MASK.png"
 )
 
-ARQUIVO_JSON = (
+ARQUIVO_JSON = os.path.join(
+    diretorio_info,
     f"MAPA_VALIDACAO_{slide_id}_{classificacao}.json"
 )
 
-CSV_SAIDA = (
+CSV_SAIDA = os.path.join(
+    diretorio_info,
     f"{slide_id}_labels_tiles.csv"
 )
 

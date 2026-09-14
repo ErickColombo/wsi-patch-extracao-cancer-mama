@@ -30,7 +30,15 @@ pasta_entrada = os.path.join(
     f"level_{nivel_zoom}"
 )
 
-arquivo_saida = (
+# 1. Define a estrutura de pastas: "dataset_info" -> "slide_id"
+diretorio_destino = os.path.join("dataset_info", str(slide_id))
+
+# 2. Cria as pastas automaticamente caso não existam
+os.makedirs(diretorio_destino, exist_ok=True)
+
+# 3. Atualiza o arquivo_saida para apontar para o novo diretório
+arquivo_saida = os.path.join(
+    diretorio_destino,
     f"MAPA_VALIDACAO_{slide_id}_{classificacao}.jpg"
 )
 
