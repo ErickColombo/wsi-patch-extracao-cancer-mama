@@ -113,7 +113,7 @@ tiles_processados = carregar_cache()
 def process_and_save_tile(level, x, y, save_dir):
 
 
-    print(response.url)
+    #print(response.url)
     cache_key = f"{level}_{x}_{y}"
 
     if cache_key in tiles_processados:

@@ -1,6 +1,6 @@
 # CONFIGURAÇÕES DO S
 
-/dataset
+/dataset_tumor
 config/config.json
 .env
 __pycache__/
