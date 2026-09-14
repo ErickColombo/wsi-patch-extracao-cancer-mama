@@ -1,0 +1,24 @@
+{
+"slide_id": "IDENTIFICADOR DA LAMINA",
+"classificacao": "MGN / BNG",
+
+"nivel_zoom": 4,
+
+"max_threads": 1,
+
+"inicio_x": 0,
+"limite_maximo_x": 0,
+
+"inicio_y": 0,
+"limite_maximo_y": 0,
+
+"base_url": "https://seu-servidor-aqui",
+
+"slide_path": "SUA REQUISIÇÃO NO SERVIDOR AQUI CASO HOUVER. EX: D:\\upload\\slides\\id",
+
+"pasta_principal": "dataset_tumor",
+
+"tamanho_tile_original": 256,
+
+"fator_reducao": 8
+}
