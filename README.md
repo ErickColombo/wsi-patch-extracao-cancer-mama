@@ -1,4 +1,6 @@
-# Este repositório contém o pipeline de aquisição, processamento e estruturação de dados desenvolvido como parte do Trabalho de Conclusão de Curso em Ciência da Computação. 
+# wsi-patch-extracao-cancer-mama
+
+Este repositório contém o pipeline de aquisição, processamento e estruturação de dados desenvolvido como parte do Trabalho de Conclusão de Curso em Ciência da Computação. 
 
 O projeto tem como objetivo principal investigar a influência das representações cromáticas na classificação de imagens histopatológicas, utilizando arquiteturas de Redes Neurais Convolucionais (CNNs), sendo elas ResNet50, EfficientNetV2 e ConvNeXtV2.
 
