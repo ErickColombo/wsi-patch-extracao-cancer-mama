@@ -5,9 +5,7 @@ import csv
 import numpy as np
 from PIL import Image
 
-# ==========================================
 # CARREGA CONFIGURAÇÕES
-# ==========================================
 with open("config/config.json", "r", encoding="utf-8") as f:
     config = json.load(f)
 
@@ -17,9 +15,7 @@ classificacao = config["classificacao"]
 nivel_zoom = config["nivel_zoom"]
 pasta_principal = config["pasta_principal"]
 
-# ==========================================
 # CAMINHOS AUTOMÁTICOS
-# ==========================================
 nome_pasta_base = f"{slide_id}_{classificacao}"
 
 PASTA_TILES = os.path.join(
@@ -28,10 +24,8 @@ PASTA_TILES = os.path.join(
     f"level_{nivel_zoom}"
 )
 
-# 1. Define o diretório de informações atualizado
 diretorio_info = os.path.join("dataset_info", str(slide_id))
 
-# 2. Atualiza os caminhos de leitura e do CSV para o novo diretório
 ARQUIVO_MASK = os.path.join(
     diretorio_info,
     f"MAPA_VALIDACAO_{slide_id}_{classificacao}_MASK.png"
@@ -47,9 +41,7 @@ CSV_SAIDA = os.path.join(
     f"{slide_id}_labels_tiles.csv"
 )
 
-# ==========================================
 # CARREGA METADADOS
-# ==========================================
 with open(ARQUIVO_JSON, "r", encoding="utf-8") as f:
     meta = json.load(f)
 
@@ -61,16 +53,13 @@ tamanho_reduzido = meta["tamanho_reduzido"]
 altura_original = meta["altura_original"]
 largura_original = meta["largura_original"]
 
-# ==========================================
+
 # CARREGA MÁSCARA
-# ==========================================
 mask = np.array(
     Image.open(ARQUIVO_MASK).convert("RGB")
 )
 
-# ==========================================
 # DETECÇÃO DO VERDE
-# ==========================================
 def calcular_percentual_verde(crop):
 
     verde = (
@@ -81,9 +70,7 @@ def calcular_percentual_verde(crop):
 
     return float(verde.mean() * 100)
 
-# ==========================================
 # PROCESSAMENTO
-# ==========================================
 padrao = re.compile(r"X(\d+)_Y(\d+)")
 
 linhas = []
@@ -118,9 +105,7 @@ for arquivo in os.listdir(PASTA_TILES):
 
     pct_verde = calcular_percentual_verde(crop)
 
-    # ======================================
     # CLASSIFICAÇÃO
-    # ======================================
 
     if pct_verde == 0:
 
@@ -143,9 +128,7 @@ for arquivo in os.listdir(PASTA_TILES):
         slide_id
     ])
 
-# ==========================================
 # SALVA CSV
-# ==========================================
 with open(
     CSV_SAIDA,
     "w",
@@ -168,9 +151,7 @@ with open(
 
 print(f"CSV gerado: {CSV_SAIDA}")
 
-# ==========================================
 # ESTATÍSTICAS
-# ==========================================
 normal = sum(1 for l in linhas if l[4] == "NORMAL")
 borda = sum(1 for l in linhas if l[4] == "BORDA")
 tumor = sum(1 for l in linhas if l[4] == "TUMOR")

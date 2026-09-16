@@ -3,9 +3,7 @@ import re
 import json
 from PIL import Image
 
-# ==========================================
 # CARREGA CONFIGURAÇÕES
-# ==========================================
 with open("config/config.json", "r", encoding="utf-8") as f:
     config = json.load(f)
 
@@ -19,9 +17,7 @@ pasta_principal = config["pasta_principal"]
 tamanho_tile_original = config["tamanho_tile_original"]
 fator_reducao = config["fator_reducao"]
 
-# ==========================================
 # CAMINHOS AUTOMÁTICOS
-# ==========================================
 nome_pasta_base = f"{slide_id}_{classificacao}"
 
 pasta_entrada = os.path.join(
@@ -30,21 +26,16 @@ pasta_entrada = os.path.join(
     f"level_{nivel_zoom}"
 )
 
-# 1. Define a estrutura de pastas: "dataset_info" -> "slide_id"
 diretorio_destino = os.path.join("dataset_info", str(slide_id))
 
-# 2. Cria as pastas automaticamente caso não existam
 os.makedirs(diretorio_destino, exist_ok=True)
 
-# 3. Atualiza o arquivo_saida para apontar para o novo diretório
 arquivo_saida = os.path.join(
     diretorio_destino,
     f"MAPA_VALIDACAO_{slide_id}_{classificacao}.jpg"
 )
 
-# ==========================================
 # FUNÇÃO PRINCIPAL
-# ==========================================
 def gerar_mapa_visao_geral(
     pasta_tiles,
     nome_saida,
@@ -230,9 +221,7 @@ def gerar_mapa_visao_geral(
         f"{nome_saida}"
     )
 
-# ==========================================
 # EXECUÇÃO
-# ==========================================
 if __name__ == "__main__":
 
     gerar_mapa_visao_geral(

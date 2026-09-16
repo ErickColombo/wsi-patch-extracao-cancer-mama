@@ -3,9 +3,7 @@ import csv
 import json
 from PIL import Image, ImageDraw
 
-# ==========================================
 # CARREGA CONFIGURAÇÕES
-# ==========================================
 with open("config/config.json", "r", encoding="utf-8") as f:
     config = json.load(f)
 
@@ -13,12 +11,9 @@ with open("config/config.json", "r", encoding="utf-8") as f:
 slide_id = config["slide_id"]
 classificacao = config["classificacao"]
 
-# ==========================================
 # ARQUIVOS AUTOMÁTICOS
-# ==========================================
 diretorio_info = os.path.join("dataset_info", str(slide_id))
 
-# Garante que a pasta existe (embora já deva ter sido criada nos passos anteriores)
 os.makedirs(diretorio_info, exist_ok=True)
 
 MAPA_ORIGINAL = os.path.join(
@@ -41,20 +36,15 @@ SAIDA = os.path.join(
     f"MAPA_VALIDACAO_{slide_id}_{classificacao}_RECONSTRUIDO.png"
 )
 
-# ==========================================
 # METADADOS
-# ==========================================
-
 with open(JSON_META, "r", encoding="utf-8") as f:
     meta = json.load(f)
 
 tamanho_reduzido = meta["tamanho_reduzido"]
 altura_original = meta["altura_original"]
 
-# ==========================================
-# CARREGA MAPA
-# ==========================================
 
+# CARREGA MAPA
 img = Image.open(MAPA_ORIGINAL).convert("RGBA")
 
 overlay = Image.new(
@@ -65,10 +55,7 @@ overlay = Image.new(
 
 draw = ImageDraw.Draw(overlay)
 
-# ==========================================
 # DESENHA TILES
-# ==========================================
-
 with open(CSV_LABELS, "r", encoding="utf-8") as f:
 
     reader = csv.DictReader(f)
@@ -116,10 +103,7 @@ with open(CSV_LABELS, "r", encoding="utf-8") as f:
             fill=cor
         )
 
-# ==========================================
 # JUNTA IMAGEM + OVERLAY
-# ==========================================
-
 resultado = Image.alpha_composite(
     img,
     overlay

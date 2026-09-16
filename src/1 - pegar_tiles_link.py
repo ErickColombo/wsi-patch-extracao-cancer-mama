@@ -10,9 +10,7 @@ import threading
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-# ==========================================
 # CARREGA CONFIGURAÇÕES
-# ==========================================
 with open("config/config.json", "r", encoding="utf-8") as f:
     config = json.load(f)
 
@@ -40,9 +38,7 @@ pasta_principal = config["pasta_principal"]
 
 
 
-# ==========================================
 # CONFIGURAÇÃO DE SESSÃO HTTP
-# ==========================================
 def criar_sessao_http():
     session = requests.Session()
 
@@ -67,9 +63,7 @@ def criar_sessao_http():
 
 http_session = criar_sessao_http()
 
-# ==========================================
 # ESTRUTURA DE PASTAS E CACHE
-# ==========================================
 nome_pasta_base = f"{slide_id}_{classificacao}"
 
 save_directory = os.path.join(
@@ -107,9 +101,7 @@ def salvar_no_cache(cache_key):
 
 tiles_processados = carregar_cache()
 
-# ==========================================
 # FUNÇÃO DE PROCESSAMENTO
-# ==========================================
 def process_and_save_tile(level, x, y, save_dir):
 
 
@@ -173,7 +165,7 @@ def process_and_save_tile(level, x, y, save_dir):
 
             img_np = np.array(img)
 
-            # Branco puro
+            # Branco puro ou muito vidro
             if np.all(img_np == 255):
                 print(f"Vidro: X{x} Y{y} ignorado.")
 
@@ -228,9 +220,7 @@ def process_and_save_tile(level, x, y, save_dir):
 
                 return False
 
-# ==========================================
 # EXECUÇÃO PARALELA
-# ==========================================
 if __name__ == "__main__":
 
     print(f"Iniciando varredura do nível {nivel_zoom}")
