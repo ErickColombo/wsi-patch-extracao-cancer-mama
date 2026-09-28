@@ -44,7 +44,7 @@ A base deste pipeline de processamento foi construída sobre as seguintes tecnol
 ### 1. Execução
 Os scripts Python devem ser executados seguindo a ordem numérica de sua nomenclatura (1, 2, 3, 4 e 5), uma vez que um arquivo depende da saída gerada pelo anterior para funcionar. 
 
-**Nota sobre validação:** Os scripts 2 e 5 são voltados exclusivamente para testes e validação visual, permitindo a visualização da lâmina inteira reconstituída e com a sobreposição do mapa de calor.
+**Nota sobre validação:** Os scripts 2 e 5 possuem retorno com validação visual, permitindo analisar a lâmina inteira reconstituída(script 2) e com a sobreposição do mapa de calor(script 5).
 
 **Nota sobre acesso aos dados:** Considerando a forma de aquisição das lâminas disponível, o arquivo 1 foi implementado para buscar os tiles (recortes) diretamente em um servidor em nuvem. Por se tratar de um ambiente com acesso restrito, não será possível replicar essa extração diretamente sem as devidas permissões. Caso deseje replicar este estudo, o leitor poderá adaptar a lógica de extração e salvamento do script 1 para o seu caso de uso (imagens locais, por exemplo). Para que os demais códigos funcionem corretamente, é estritamente necessário manter o padrão de nomenclatura no salvamento dos arquivos, permitindo que a expressão regular `padrao = re.compile(r"X(\d+)_Y(\d+)")` consiga extrair e identificar as coordenadas dos *tiles*. 
 
