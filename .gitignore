@@ -2,8 +2,11 @@
 
 /dataset_extraido
 /dataset_info
+/dataset_preparado
+/dataset_treinamento
 /dataset
 config/config.json
+config.json
 .env
 __pycache__/
 *.pyc
