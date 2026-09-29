@@ -31,20 +31,23 @@ O pipeline de **Preparação do Dataset** é composto por 5 etapas automatizadas
 O pipeline de **Criação do Dataset para treinamento** é composto por x etapas automatizadas:
 
 
-1. **Extração de Patches (Tile Scraper):** 
-   Realiza o download paralelizado de tiles (recortes) de lâminas histopatológicas a partir de um servidor remoto. Inclui mecanismos de tolerância a falhas (HTTP Retries) e descarte automático de regiões sem tecido (fundo branco), otimizando o armazenamento e o processamento computacional.
+6. Inventário e Caracterização dos Pacientes:
 
-2. **Mapeamento e Validação Visão Geral:** 
-   Reconstrói uma miniatura da WSI original a partir dos patches individuais extraídos, gerando mapas de coordenadas (JSON) para referenciamento espacial e imagens base para a criação de máscaras de segmentação.
+Realiza a varredura completa da estrutura do dataset gerado na etapa anterior, identificando automaticamente todos os pacientes disponíveis. Para cada paciente, são contabilizados os patches pertencentes às classes NORMAL, BORDA e TUMOR, além da classificação diagnóstica da lâmina (MGN para maligno e BGN para benigno). O resultado é consolidado em um arquivo pacientes.csv, utilizado como base para as etapas posteriores de balanceamento e divisão dos dados.
 
-3. **Rotulagem Automática Baseada em Máscaras:** 
-   Cruza as coordenadas espaciais de cada tile extraído com uma máscara de validação. Através da detecção de canais cromáticos específicos (análise de espectro verde/RGB), o algoritmo classifica matematicamente cada tile em três categorias distintas: `NORMAL`, `BORDA` e `TUMOR`.
+7. Separação Estratificada dos Pacientes (Train/Validation/Test):
 
-4. **Estruturação do Dataset Final:** 
-   Lê o arquivo `.csv` gerado na etapa de rotulagem e orquestra a movimentação física dos arquivos para uma estrutura de diretórios padronizada (`dataset/ID_CLASSIFICACAO/CLASSE`), pronta para ser consumida por instâncias do `torch.utils.data.DataLoader`.
+Executa a divisão do conjunto de pacientes em três subconjuntos independentes: treinamento, validação e teste. Diferentemente de abordagens baseadas em patches individuais, a separação é realizada em nível de paciente, evitando vazamento de informação (data leakage) entre os conjuntos. Além disso, o algoritmo considera a quantidade de patches disponíveis em cada paciente, buscando uma distribuição equilibrada tanto do número de amostras quanto das classes diagnósticas entre os subconjuntos.
 
-5. **Reconstrução e Validação Visual (Overlay):** 
-   Gera um mapa de calor sobre a miniatura da WSI original, destacando em vermelho as áreas classificadas como "TUMOR" e em amarelo as áreas de "BORDA", permitindo a validação qualitativa do processo de rotulagem.
+8. Consolidação dos Patches e Metadados:
+
+Integra as informações provenientes dos arquivos de inventário, dos arquivos de divisão dos pacientes e dos arquivos de rotulagem gerados durante a preparação do dataset. Nesta etapa é criado um arquivo mestre (patches_master.csv) contendo todas as informações necessárias para o treinamento dos modelos, incluindo identificação do paciente, classificação diagnóstica, coordenadas espaciais do patch, percentual tumoral, classe do patch, conjunto de pertencimento (treino, validação ou teste) e caminho completo da imagem correspondente.
+
+9. Carregamento Dinâmico para Deep Learning (PyTorch Dataset):
+
+Implementa uma classe personalizada baseada em torch.utils.data.Dataset, responsável por fornecer os dados aos modelos de aprendizado profundo. Durante o carregamento das imagens, o sistema permite gerar dinamicamente diferentes representações cromáticas a partir do mesmo conjunto de dados, incluindo RGB, escala de cinza e canais individuais (R, G ou B). Essa abordagem elimina a necessidade de armazenar múltiplas versões físicas do dataset, reduzindo o espaço de armazenamento e garantindo consistência entre os experimentos realizados com as diferentes arquiteturas de Redes Neurais Convolucionais.
+
+
 ---
 
 ## Tecnologias Utilizadas
