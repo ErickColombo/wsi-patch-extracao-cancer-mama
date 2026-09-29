@@ -8,9 +8,9 @@ O projeto tem como objetivo principal investigar a influência das representaç�
 
 ## Metodologia e Pipeline de Dados
 
-O foco dos scripts presentes neste repositório é a etapa de **Preparação do Dataset**, convertendo Whole Slide Images (WSIs) e máscaras de anotação em um conjunto de dados estruturado e rotulado para o treinamento dos modelos de Deep Learning.
+O foco dos scripts presentes neste repositório é a etapa de **Preparação do Dataset** e **Criação do Dataset para treinamento**, convertendo Whole Slide Images (WSIs) e máscaras de anotação em um conjunto de dados estruturado e rotulado para o treinamento dos modelos de Deep Learning.
 
-O pipeline é composto por 5 etapas automatizadas:
+O pipeline de **Preparação do Dataset** é composto por 5 etapas automatizadas:
 
 1. **Extração de Patches (Tile Scraper):** 
    Realiza o download paralelizado de tiles (recortes) de lâminas histopatológicas a partir de um servidor remoto. Inclui mecanismos de tolerância a falhas (HTTP Retries) e descarte automático de regiões sem tecido (fundo branco), otimizando o armazenamento e o processamento computacional.
@@ -27,11 +27,29 @@ O pipeline é composto por 5 etapas automatizadas:
 5. **Reconstrução e Validação Visual (Overlay):** 
    Gera um mapa de calor sobre a miniatura da WSI original, destacando em vermelho as áreas classificadas como "TUMOR" e em amarelo as áreas de "BORDA", permitindo a validação qualitativa do processo de rotulagem.
 
+
+O pipeline de **Criação do Dataset para treinamento** é composto por x etapas automatizadas:
+
+
+1. **Extração de Patches (Tile Scraper):** 
+   Realiza o download paralelizado de tiles (recortes) de lâminas histopatológicas a partir de um servidor remoto. Inclui mecanismos de tolerância a falhas (HTTP Retries) e descarte automático de regiões sem tecido (fundo branco), otimizando o armazenamento e o processamento computacional.
+
+2. **Mapeamento e Validação Visão Geral:** 
+   Reconstrói uma miniatura da WSI original a partir dos patches individuais extraídos, gerando mapas de coordenadas (JSON) para referenciamento espacial e imagens base para a criação de máscaras de segmentação.
+
+3. **Rotulagem Automática Baseada em Máscaras:** 
+   Cruza as coordenadas espaciais de cada tile extraído com uma máscara de validação. Através da detecção de canais cromáticos específicos (análise de espectro verde/RGB), o algoritmo classifica matematicamente cada tile em três categorias distintas: `NORMAL`, `BORDA` e `TUMOR`.
+
+4. **Estruturação do Dataset Final:** 
+   Lê o arquivo `.csv` gerado na etapa de rotulagem e orquestra a movimentação física dos arquivos para uma estrutura de diretórios padronizada (`dataset/ID_CLASSIFICACAO/CLASSE`), pronta para ser consumida por instâncias do `torch.utils.data.DataLoader`.
+
+5. **Reconstrução e Validação Visual (Overlay):** 
+   Gera um mapa de calor sobre a miniatura da WSI original, destacando em vermelho as áreas classificadas como "TUMOR" e em amarelo as áreas de "BORDA", permitindo a validação qualitativa do processo de rotulagem.
 ---
 
 ## Tecnologias Utilizadas
 
-A base deste pipeline de processamento foi construída sobre as seguintes tecnologias:
+A base deste repositório foi construída sobre as seguintes tecnologias:
 - **Python 3.12.9**
 - **NumPy:** Processamento matricial, detecção de proporção de pixels (fundo) e operações lógicas em canais de cor.
 - **Pillow (PIL):** Manipulação, redimensionamento, rotação e criação de overlays (composições alfa) nas imagens histopatológicas.
@@ -42,7 +60,7 @@ A base deste pipeline de processamento foi construída sobre as seguintes tecnol
 ##  Instruções de Uso e Configuração
 
 ### 1. Execução
-Os scripts Python devem ser executados seguindo a ordem numérica de sua nomenclatura (1, 2, 3, 4 e 5), uma vez que um arquivo depende da saída gerada pelo anterior para funcionar. 
+Os scripts de preparação do Dataset devem ser executados seguindo a ordem numérica de sua nomenclatura (1, 2, 3, 4 e 5), uma vez que um arquivo depende da saída gerada pelo anterior para funcionar. 
 
 **Nota sobre validação:** Os scripts 2 e 5 possuem retorno com validação visual, permitindo analisar a lâmina inteira reconstituída(script 2) e com a sobreposição do mapa de calor(script 5).
 
@@ -50,8 +68,13 @@ Os scripts Python devem ser executados seguindo a ordem numérica de sua nomencl
 
 Em complemento, o arquivo config.json possui algumas variáveis que também tem correlação com o método de aquisição do arquivo 1, logo, inicio_x, limite_maximo_x, inicio_y, limite_maximo_y, base_url e slide_path poderão ser adaptadas ou completamente removidas. ps: o nivel_zoom foi usado em outros .py apenas para renomeação, deixar ele como vazio ("") para evitar erros e não precisar adaptar.
 
+Os scripts de Criação do Dataset para treinamento devem ser executados seguindo a ordem numérica de sua nomenclatura (x), uma vez que um arquivo depende da saída gerada pelo anterior para funcionar. 
+
 ### 2. Dependências
-Recomenda-se a criação de um ambiente virtual (venv) para evitar conflitos de dependências. Com o ambiente ativo, instale as bibliotecas necessárias:
+Recomenda-se a criação de um ambiente virtual (venv) para evitar conflitos de dependências. 
+Obs: Lembrar de criar a venv já na versão 3.12.9 do Python, bem como estar com o pip atualizado.
+Em sequencia, com o ambiente ativo, instale as bibliotecas necessárias:
+
 
 ```bash
 pip install -r requirements.txt
