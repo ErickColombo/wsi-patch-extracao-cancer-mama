@@ -138,10 +138,10 @@ for paciente in sorted(splits):
             arquivo = row["arquivo"]
 
             caminho_imagem = os.path.join(
-                DATASET_PATH,
-                paciente,
-                "level_4",
-                arquivo
+                  DATASET_PATH,
+                  paciente,
+                  classe_patch,
+                  arquivo
             )
 
             if not os.path.exists(
