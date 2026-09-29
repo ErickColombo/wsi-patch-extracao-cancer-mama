@@ -7,6 +7,9 @@
 /dataset
 config/config.json
 config.json
+config/config_dataset.json
+config_dataset.json
+/outputs
 .env
 __pycache__/
 *.pyc
