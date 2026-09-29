@@ -12,6 +12,7 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+/.vscode
 
 
 # Byte-compiled / optimized / DLL files
