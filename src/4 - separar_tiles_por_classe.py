@@ -29,7 +29,7 @@ PASTA_TILES = os.path.join(
 )
 
 PASTA_SAIDA = os.path.join(
-    "dataset",
+    "dataset_preparado",
     nome_pasta_base
 )
 
