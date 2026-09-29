@@ -1,24 +1,21 @@
 {
-"slide_id": "Identificador da Lamina",
-"classificacao": "Maligno ou Benigno",
+    "dataset_path": "dataset",
+    "dataset_info_path": "dataset_info",
 
-"nivel_zoom": 4,
+    "usar_normal": true,
+    "usar_borda": false,
+    "usar_tumor": true,
 
-"max_threads": 1,
+    "percentual_treino": 0.70,
+    "percentual_validacao": 0.15,
+    "percentual_teste": 0.15,
 
-"inicio_x": 0,
-"limite_maximo_x": 0,
+    "seed": 42,
 
-"inicio_y": 0,
-"limite_maximo_y": 0,
+    "modo_rgb": true,
+    "modo_grayscale": true,
 
-"base_url": "https://seu-servidor-aqui",
-
-"slide_path": "Sua requisição com o caminho da lamina. EX: D:\\upload\\slides\\id",
-
-"pasta_principal": "dataset_extraido",
-
-"tamanho_tile_original": 256,
-
-"fator_reducao": 8
+    "canal_r": false,
+    "canal_g": true,
+    "canal_b": false
 }
