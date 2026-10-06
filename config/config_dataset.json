@@ -6,6 +6,10 @@
     "usar_borda": false,
     "usar_tumor": true,
 
+    "usar_mgn": true,
+    "usar_bgn": true,
+    "usar_nrm": true,
+
     "percentual_treino": 0.70,
     "percentual_validacao": 0.15,
     "percentual_teste": 0.15,
