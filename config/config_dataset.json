@@ -1,0 +1,25 @@
+{
+    "dataset_path": "dataset_preparado",
+    "dataset_info_path": "dataset_info",
+
+    "usar_normal": true,
+    "usar_borda": false,
+    "usar_tumor": true,
+
+    "usar_mgn": true,
+    "usar_bgn": true,
+    "usar_nrm": true,
+
+    "percentual_treino": 0.70,
+    "percentual_validacao": 0.15,
+    "percentual_teste": 0.15,
+
+    "seed": 42,
+
+    "modo_rgb": true,
+    "modo_grayscale": false,
+
+    "canal_r": false,
+    "canal_g": false,
+    "canal_b": false
+}
