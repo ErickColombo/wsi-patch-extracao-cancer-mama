@@ -102,7 +102,7 @@ if __name__ == "__main__":
     MODELO_ESCOLHIDO = "resnet50"
     
     # DEIXE COMO TRUE PARA O TESTE NO NOTEBOOK
-    MODO_TESTE_RAPIDO = True 
+    MODO_TESTE_RAPIDO = False 
     
     PASTA_DADOS = f"dados_{MODELO_ESCOLHIDO}"
     PASTA_ESTATISTICA = f"estatistica_{MODELO_ESCOLHIDO}"

@@ -16,10 +16,10 @@
 
     "seed": 42,
 
-    "modo_rgb": true,
+    "modo_rgb": false,
     "modo_grayscale": false,
 
-    "canal_r": false,
+    "canal_r": true,
     "canal_g": false,
     "canal_b": false
 }

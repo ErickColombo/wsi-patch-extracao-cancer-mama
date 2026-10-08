@@ -179,7 +179,7 @@ if __name__ == "__main__":
     ARQUIVO_CSV = os.path.join("outputs", "patches_master.csv") 
     ARQUIVO_JSON = "config_dataset.json"  
     MODELO_ESCOLHIDO = "resnet50" 
-    MODO_TESTE_RAPIDO = True 
+    MODO_TESTE_RAPIDO = False 
     BATCH_SIZE = 8 
     NUM_WORKERS = 0 
     
