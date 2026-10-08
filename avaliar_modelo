@@ -1,0 +1,118 @@
+import os
+import torch
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from torch.utils.data import DataLoader, Subset
+from tqdm import tqdm
+from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score
+
+# Importa as classes do seu main.py
+from main import build_model, get_transforms, HistopathologyDataset
+
+def avaliar(modelo_path, csv_path, json_path, modelo_nome, device, pasta_saida, modo_rapido=True):
+    print(f"Carregando {modelo_nome} a partir de {modelo_path}...")
+    
+    _, test_transform = get_transforms()
+    test_dataset = HistopathologyDataset(csv_path, split="test", config_path=json_path, transform=test_transform)
+    
+    # ---- CORREÇÃO DO GARGALO ----
+    if modo_rapido:
+        print(f"\n*** MODO TESTE RÁPIDO ATIVADO ***")
+        print("Avaliando apenas 32 imagens para teste de código...")
+        test_dataset = Subset(test_dataset, range(min(32, len(test_dataset))))
+    else:
+        print(f"\nAvaliando conjunto COMPLETO de Teste ({len(test_dataset)} imagens)...")
+    
+    # Aumentei o batch size para acelerar
+    test_loader = DataLoader(test_dataset, batch_size=16, shuffle=False, num_workers=0)
+    
+    model = build_model(model_name=modelo_nome)
+    model.load_state_dict(torch.load(modelo_path, map_location=device))
+    model.to(device)
+    model.eval()
+    
+    y_true = []
+    y_scores = []
+    
+    print("\nIniciando inferência no conjunto de Teste...")
+    with torch.no_grad():
+        # Adicionado o TQDM para você ver que não travou
+        for images, labels in tqdm(test_loader, desc="[Testando]"):
+            images = images.to(device)
+            outputs = model(images).squeeze()
+            if outputs.dim() == 0: outputs = outputs.unsqueeze(0)
+            
+            probs = torch.sigmoid(outputs)
+            
+            y_true.extend(labels.numpy())
+            y_scores.extend(probs.cpu().numpy())
+            
+    y_true = np.array(y_true)
+    y_scores = np.array(y_scores)
+    y_pred = (y_scores >= 0.5).astype(int)
+    
+    # ---- CÁLCULO E EXPORTAÇÃO DAS ESTATÍSTICAS ----
+    caminho_relatorio = os.path.join(pasta_saida, "relatorio_metricas.txt")
+    caminho_grafico = os.path.join(pasta_saida, "matriz_confusao.png")
+    
+    with open(caminho_relatorio, "w", encoding="utf-8") as f:
+        f.write("="*50 + "\n")
+        f.write(f"RESULTADOS GERAIS - {modelo_nome.upper()}\n")
+        f.write("="*50 + "\n\n")
+        
+        try:
+            auc = roc_auc_score(y_true, y_scores)
+            resultado_auc = f"AUC-ROC: {auc:.4f}\n\n"
+            f.write(resultado_auc)
+            print(f"\n{resultado_auc}")
+        except ValueError:
+            f.write("AUC-ROC: Não foi possível calcular (apenas uma classe presente).\n\n")
+
+        relatorio_class = classification_report(y_true, y_pred, target_names=['Benigno/Normal', 'Maligno'])
+        f.write("Relatório de Classificação (Precision, Recall, F1):\n")
+        f.write(relatorio_class + "\n\n")
+        print(relatorio_class)
+        
+        cm = confusion_matrix(y_true, y_pred)
+        f.write("Matriz de Confusão [TN, FP] / [FN, TP]:\n")
+        f.write(str(cm) + "\n")
+    
+    # ---- GERAÇÃO DO GRÁFICO DA MATRIZ DE CONFUSÃO ----
+    plt.figure(figsize=(6, 5))
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", 
+                xticklabels=['Benigno/Normal', 'Maligno'], 
+                yticklabels=['Benigno/Normal', 'Maligno'])
+    plt.ylabel('Classe Verdadeira (Patologista)')
+    plt.xlabel('Previsão do Modelo (IA)')
+    plt.title(f'Matriz de Confusão - {modelo_nome.upper()}')
+    plt.tight_layout()
+    plt.savefig(caminho_grafico, dpi=300) 
+    plt.close()
+
+    print("="*50)
+    print(f"Sucesso! Relatório salvo em: {caminho_relatorio}")
+    print(f"Gráfico da Matriz salvo em: {caminho_grafico}")
+    print("="*50)
+
+if __name__ == "__main__":
+    ARQUIVO_CSV = os.path.join("outputs", "patches_master.csv")
+    ARQUIVO_JSON = "config_dataset.json"
+    MODELO_ESCOLHIDO = "resnet50"
+    
+    # DEIXE COMO TRUE PARA O TESTE NO NOTEBOOK
+    MODO_TESTE_RAPIDO = True 
+    
+    PASTA_DADOS = f"dados_{MODELO_ESCOLHIDO}"
+    PASTA_ESTATISTICA = f"estatistica_{MODELO_ESCOLHIDO}"
+    os.makedirs(PASTA_ESTATISTICA, exist_ok=True)
+    
+    PESOS_SALVOS = os.path.join(PASTA_DADOS, "melhor_modelo.pth")
+    
+    device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu")
+    
+    if not os.path.exists(PESOS_SALVOS):
+        print(f"ERRO: Não encontrei os pesos em {PESOS_SALVOS}. Rode o main.py primeiro!")
+    else:
+        avaliar(PESOS_SALVOS, ARQUIVO_CSV, ARQUIVO_JSON, MODELO_ESCOLHIDO, device, PASTA_ESTATISTICA, modo_rapido=MODO_TESTE_RAPIDO)

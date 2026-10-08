@@ -21,6 +21,21 @@ PCT_TESTE = config["percentual_teste"]
 
 SEED = config["seed"]
 
+USAR_MGN = config.get(
+    "usar_mgn",
+    True
+)
+
+USAR_BGN = config.get(
+    "usar_bgn",
+    True
+)
+
+USAR_NRM = config.get(
+    "usar_nrm",
+    True
+)
+
 random.seed(SEED)
 
 # ==========================================
@@ -74,6 +89,24 @@ bgn = [
     p for p in pacientes
     if p["tipo"].upper() == "BGN"
 ]
+
+nrm = [
+    p for p in pacientes
+    if p["tipo"].upper() == "NRM"
+]
+
+# ==========================================
+# FILTROS
+# ==========================================
+
+if not USAR_MGN:
+    mgn = []
+
+if not USAR_BGN:
+    bgn = []
+
+if not USAR_NRM:
+    nrm = []
 
 # ==========================================
 # DISTRIBUIÇÃO BALANCEADA
@@ -146,9 +179,25 @@ mgn_train, mgn_val, mgn_test = distribuir_grupo(mgn)
 
 bgn_train, bgn_val, bgn_test = distribuir_grupo(bgn)
 
-train = mgn_train + bgn_train
-val = mgn_val + bgn_val
-test = mgn_test + bgn_test
+nrm_train, nrm_val, nrm_test = distribuir_grupo(nrm)
+
+train = (
+    mgn_train +
+    bgn_train +
+    nrm_train
+)
+
+val = (
+    mgn_val +
+    bgn_val +
+    nrm_val
+)
+
+test = (
+    mgn_test +
+    bgn_test +
+    nrm_test
+)
 
 # ==========================================
 # SALVAR CSV
@@ -218,12 +267,17 @@ def resumo(nome, dados):
 
     mgn_count = sum(
         1 for p in dados
-        if p["tipo"] == "MGN"
+        if p["tipo"].upper() == "MGN"
     )
 
     bgn_count = sum(
         1 for p in dados
-        if p["tipo"] == "BGN"
+        if p["tipo"].upper() == "BGN"
+    )
+
+    nrm_count = sum(
+        1 for p in dados
+        if p["tipo"].upper() == "NRM"
     )
 
     return (
@@ -231,6 +285,7 @@ def resumo(nome, dados):
         f"Pacientes: {len(dados)}\n"
         f"MGN: {mgn_count}\n"
         f"BGN: {bgn_count}\n"
+        f"NRM: {nrm_count}\n"
         f"Patches: {patches}\n\n"
     )
 
